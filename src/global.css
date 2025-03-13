@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+@theme {
+  --color-yellow-dark: #C47F17;
+  --color-yellow: #DBAC2C;
+  --color-yellow-light: #F1E9C9;
+
+  --color-purple-dark: #4B2995;
+  --color-purple: #8047F8;
+  --color-purple-light: #EBE5F9;
+
+  --color-title: #272221;
+  --color-subtitle: #403937;
+  --color-text: #574F4D;
+  --color-label: #8D8686;
+  --color-hover: #D7D5D5;
+  --color-button: #E6E5E5;
+  --color-input: #EDEDED;
+  --color-card: #F3F2F2;
+  --color-background: #FAFAFA;
+  --color-white: #FFFFFF;
+
+  --font-heading: "Baloo 2", sans-serif;
+  --default-font-family: "Roboto", sans-serif;
+}
