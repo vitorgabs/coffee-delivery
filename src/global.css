@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@layer base {
+  body {
+    @apply bg-background text-text antialiased;
+  }
+}
+
 @theme {
   --color-yellow-dark: #C47F17;
   --color-yellow: #DBAC2C;
