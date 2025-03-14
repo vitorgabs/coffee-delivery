@@ -23,5 +23,9 @@
   --font-heading: "Baloo 2", sans-serif;
   --default-font-family: "Roboto", sans-serif;
 
+  --text-2xs: 0.625rem;
+
+  --radius-5xl: 2.25rem;
+
   --container-6xl: 70rem;
 }
