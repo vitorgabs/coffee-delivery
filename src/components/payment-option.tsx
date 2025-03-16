@@ -13,7 +13,6 @@ export function PaymentOption({
   isSelected,
   ...rest
 }: Props) {
-  console.log({ isSelected })
   return (
     <label
       data-checked={isSelected}
