@@ -1,16 +1,29 @@
 import { useState } from 'react'
 import { Minus, Plus } from '@phosphor-icons/react'
 
-export function QuantitySelector() {
-  const [quantity, setQuantity] = useState(1)
+interface Props {
+  onDecrement: () => void
+  onIncrement: () => void
+  initialValue?: number
+}
+
+export function QuantitySelector({
+  onDecrement,
+  onIncrement,
+  initialValue = 1,
+}: Props) {
+  const [quantity, setQuantity] = useState(initialValue)
 
   function decrement() {
     if (quantity === 1) return
-    setQuantity((prevState) => prevState - 1)
+
+    setQuantity((prevQuantity) => prevQuantity - 1)
+    onDecrement()
   }
 
   function increment() {
-    setQuantity((prevState) => prevState + 1)
+    setQuantity((prevQuantity) => prevQuantity + 1)
+    onIncrement()
   }
 
   return (

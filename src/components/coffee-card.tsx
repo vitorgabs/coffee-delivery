@@ -1,4 +1,7 @@
+import { useRef } from 'react'
 import { ShoppingCartSimple } from '@phosphor-icons/react'
+
+import { useCart } from '../hooks/use-cart'
 
 import { QuantitySelector } from './quantity-selector'
 
@@ -11,7 +14,24 @@ interface Props {
   image: string
 }
 
-export function CoffeeCard({ title, description, tags, price, image }: Props) {
+export function CoffeeCard({
+  id,
+  title,
+  description,
+  tags,
+  price,
+  image,
+}: Props) {
+  const { addItem } = useCart()
+  const itemQuantity = useRef(1)
+
+  function handleAddItemToCart() {
+    addItem({
+      id,
+      quantity: itemQuantity.current,
+    })
+  }
+
   return (
     <article className="bg-card rounded-tr-5xl rounded-bl-5xl flex flex-col items-center rounded-tl-md rounded-br-md px-5 pb-5">
       <header className="-mt-5 flex flex-col items-center gap-3">
@@ -48,10 +68,14 @@ export function CoffeeCard({ title, description, tags, price, image }: Props) {
         </div>
 
         <div className="flex gap-2">
-          <QuantitySelector />
+          <QuantitySelector
+            onDecrement={() => (itemQuantity.current -= 1)}
+            onIncrement={() => (itemQuantity.current += 1)}
+          />
 
           <button
             type="button"
+            onClick={handleAddItemToCart}
             className="bg-purple-dark hover:bg-purple cursor-pointer rounded-md p-2 transition-colors"
           >
             <ShoppingCartSimple weight="fill" className="size-5.5 text-white" />

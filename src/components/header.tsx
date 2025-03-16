@@ -1,10 +1,12 @@
 import { MapPin, ShoppingCart } from '@phosphor-icons/react'
 import { Link } from 'react-router'
 
+import { useCart } from '../hooks/use-cart'
+
 import logo from '../assets/logo.svg'
 
 export function Header() {
-  const cartItemCount = 0
+  const { cartItemCount } = useCart()
 
   return (
     <header className="mx-auto flex max-w-6xl justify-between py-8">
