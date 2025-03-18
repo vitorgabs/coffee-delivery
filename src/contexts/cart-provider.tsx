@@ -1,49 +1,36 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode, useReducer } from 'react'
 
-import { CartContext, Item } from './cart-context'
+import { CartContext } from './cart-context'
+import { cartReducer, Item } from '../reducers/cart-reducer'
+import {
+  addItemAction,
+  removeItemAction,
+  incrementItemQuantityAction,
+  decrementItemQuantityAction,
+} from '../reducers/cart-actions'
 
 interface CartContextProviderProps {
   children: ReactNode
 }
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
-  const [items, setItems] = useState([] as Item[])
+  const [items, dispatch] = useReducer(cartReducer, [] as Item[])
   const cartItemCount = items.length
 
-  function addItem(newItem: Item) {
-    setItems((prevItems) => {
-      const isAlreadyInCart = prevItems.find((item) => item.id === newItem.id)
-
-      if (isAlreadyInCart) {
-        return prevItems.map((item) =>
-          item.id === newItem.id
-            ? { ...item, quantity: item.quantity + newItem.quantity }
-            : item
-        )
-      }
-
-      return [...prevItems, newItem]
-    })
+  function addItem(item: Item) {
+    dispatch(addItemAction(item))
   }
 
   function removeItem(id: string) {
-    setItems((prevItems) => prevItems.filter((item) => item.id !== id))
-  }
-
-  function decrementItemQuantity(id: string) {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-      )
-    )
+    dispatch(removeItemAction(id))
   }
 
   function incrementItemQuantity(id: string) {
-    setItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    )
+    dispatch(incrementItemQuantityAction(id))
+  }
+
+  function decrementItemQuantity(id: string) {
+    dispatch(decrementItemQuantityAction(id))
   }
 
   return (

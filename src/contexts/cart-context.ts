@@ -1,9 +1,6 @@
 import { createContext } from 'react'
 
-export interface Item {
-  id: string
-  quantity: number
-}
+import { Item } from '../reducers/cart-reducer'
 
 interface CartContextData {
   items: Item[]
