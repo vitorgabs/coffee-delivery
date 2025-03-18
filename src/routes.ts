@@ -19,7 +19,7 @@ export const router = createBrowserRouter([
         Component: Checkout,
       },
       {
-        path: '/success',
+        path: '/order/:id/success',
         Component: Success,
       },
     ],
