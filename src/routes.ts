@@ -3,6 +3,7 @@ import { createBrowserRouter } from 'react-router'
 import { App } from './app'
 import { Home } from './pages/home'
 import { Checkout } from './pages/checkout'
+import { Success } from './pages/success'
 
 export const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
       {
         path: '/checkout',
         Component: Checkout,
+      },
+      {
+        path: '/success',
+        Component: Success,
       },
     ],
   },
