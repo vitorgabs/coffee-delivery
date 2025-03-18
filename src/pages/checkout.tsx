@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 import {
   Bank,
   CreditCard,
@@ -15,9 +17,38 @@ import { useCart } from '../hooks/use-cart'
 import { toBrlCurrency } from '../utils/formatters'
 import { coffees } from '../data.json'
 
+const orderSchema = z.object({
+  zip: z.string().nonempty('Campo obrigatório').length(8, 'Formato inválido'),
+  street: z.string().nonempty('Campo obrigatório'),
+  number: z.string().nonempty('Campo obrigatório'),
+  complement: z.string(),
+  neighborhood: z.string().nonempty('Campo obrigatório'),
+  city: z.string().nonempty('Campo obrigatório'),
+  state: z.string().length(2, 'ex: PE'),
+  payment: z.enum(['credit', 'debit', 'cash'], {
+    invalid_type_error: 'Selecione uma forma de pagamento',
+  }),
+})
+
+type OrderData = z.infer<typeof orderSchema>
+
 export function Checkout() {
-  const [selectedPaymentOption, setSelectedPaymentOption] = useState('')
   const { items } = useCart()
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(orderSchema),
+  })
+
+  const paymentOption = watch('payment')
+  const state = watch('state') ?? ''
+
+  function handlePurchase(data: OrderData) {
+    console.log({ data })
+  }
 
   const PAYMENT_OPTIONS = [
     { title: 'cartão de crédito', value: 'credit', icon: CreditCard },
@@ -63,23 +94,54 @@ export function Checkout() {
             </div>
 
             <div className="mt-8 grid grid-cols-[12.5rem_1fr_3.75rem] gap-3">
-              <TextInput placeholder="CEP" maxLength={8} />
+              <TextInput
+                placeholder="CEP"
+                maxLength={8}
+                error={errors.zip}
+                {...register('zip')}
+              />
 
               <div className="col-span-3">
-                <TextInput placeholder="Rua" />
+                <TextInput
+                  placeholder="Rua"
+                  error={errors.street}
+                  {...register('street')}
+                />
               </div>
 
-              <TextInput placeholder="Número" />
+              <TextInput
+                placeholder="Número"
+                error={errors.number}
+                {...register('number')}
+              />
 
               <div className="col-span-2">
-                <TextInput placeholder="Complemento" optional />
+                <TextInput
+                  placeholder="Complemento"
+                  optional
+                  {...register('complement')}
+                />
               </div>
 
-              <TextInput placeholder="Bairro" />
+              <TextInput
+                placeholder="Bairro"
+                error={errors.neighborhood}
+                {...register('neighborhood')}
+              />
 
-              <TextInput placeholder="Cidade" />
+              <TextInput
+                placeholder="Cidade"
+                error={errors.city}
+                {...register('city')}
+              />
 
-              <TextInput placeholder="UF" maxLength={2} />
+              <TextInput
+                placeholder="UF"
+                maxLength={2}
+                error={errors.state}
+                value={state.toUpperCase()}
+                {...register('state')}
+              />
             </div>
           </fieldset>
 
@@ -97,15 +159,23 @@ export function Checkout() {
               </div>
             </div>
 
-            <div className="mt-8 flex gap-3">
-              {PAYMENT_OPTIONS.map(({ value, ...rest }) => (
-                <PaymentOption
-                  key={value}
-                  isSelected={selectedPaymentOption === value}
-                  onClick={() => setSelectedPaymentOption(value)}
-                  {...rest}
-                />
-              ))}
+            <div>
+              <div className="mt-8 flex gap-3">
+                {PAYMENT_OPTIONS.map(({ value, ...rest }) => (
+                  <PaymentOption
+                    key={value}
+                    value={value}
+                    isSelected={paymentOption === value}
+                    {...rest}
+                    {...register('payment')}
+                  />
+                ))}
+              </div>
+              {errors.payment && (
+                <small className="text-xs text-red-500">
+                  {errors.payment.message}
+                </small>
+              )}
             </div>
           </fieldset>
         </form>
@@ -143,6 +213,7 @@ export function Checkout() {
 
           <button
             type="submit"
+            onClick={handleSubmit(handlePurchase)}
             className="bg-yellow hover:bg-yellow-dark w-full cursor-pointer rounded-md px-2 py-3 transition-colors"
           >
             <span className="text-sm leading-relaxed font-bold text-white uppercase">
