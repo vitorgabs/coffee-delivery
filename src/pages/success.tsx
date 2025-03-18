@@ -1,8 +1,24 @@
+import { useParams } from 'react-router'
 import { CurrencyDollar, MapPin, Timer } from '@phosphor-icons/react'
+
+import { useCart } from '../hooks/use-cart'
 
 import delivery from '../assets/delivery.png'
 
 export function Success() {
+  const { id } = useParams<{ id: string }>()
+  const { orders } = useCart()
+
+  const { street, number, neighborhood, city, state, payment } = orders.find(
+    (order) => order.id === id
+  )!
+
+  const paymentOption = {
+    credit: 'Cartão de Crédito',
+    debit: 'Cartão de Débito',
+    cash: 'Dinheiro',
+  }
+
   return (
     <main className="mx-auto mt-10 flex max-w-6xl items-end justify-between gap-26">
       <div>
@@ -23,11 +39,9 @@ export function Success() {
               <div className="flex flex-col">
                 <span>
                   Entrega em{' '}
-                  <span className="font-bold">
-                    Rua João Daniel Martinelli, 102
-                  </span>
+                  <span className="font-bold capitalize">{`${street}, ${number}`}</span>
                 </span>
-                <span>Farrapos - Porto Alegre, RS</span>
+                <span className="capitalize">{`${neighborhood} - ${city}, ${state}`}</span>
               </div>
             </div>
 
@@ -49,7 +63,7 @@ export function Success() {
 
               <div className="flex flex-col">
                 <span>Pagamento na entrega</span>
-                <span className="font-bold">Cartão de Crédito</span>
+                <span className="font-bold">{paymentOption[payment]}</span>
               </div>
             </div>
           </div>

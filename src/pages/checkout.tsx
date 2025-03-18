@@ -30,10 +30,10 @@ const orderSchema = z.object({
   }),
 })
 
-type OrderData = z.infer<typeof orderSchema>
+export type OrderInfo = z.infer<typeof orderSchema>
 
 export function Checkout() {
-  const { items } = useCart()
+  const { items, checkout } = useCart()
   const {
     register,
     watch,
@@ -45,10 +45,6 @@ export function Checkout() {
 
   const paymentOption = watch('payment')
   const state = watch('state') ?? ''
-
-  function handlePurchase(data: OrderData) {
-    console.log({ data })
-  }
 
   const PAYMENT_OPTIONS = [
     { title: 'cartão de crédito', value: 'credit', icon: CreditCard },
@@ -213,7 +209,7 @@ export function Checkout() {
 
           <button
             type="submit"
-            onClick={handleSubmit(handlePurchase)}
+            onClick={handleSubmit(checkout)}
             className="bg-yellow hover:bg-yellow-dark w-full cursor-pointer rounded-md px-2 py-3 transition-colors"
           >
             <span className="text-sm leading-relaxed font-bold text-white uppercase">
