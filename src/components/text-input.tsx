@@ -1,8 +1,9 @@
 import { ComponentProps, useRef } from 'react'
+import { FieldError } from 'react-hook-form'
 
 interface Props extends ComponentProps<'input'> {
   optional?: boolean
-  error?: string
+  error?: FieldError
 }
 
 export function TextInput({ optional = false, error, ...rest }: Props) {
@@ -26,7 +27,7 @@ export function TextInput({ optional = false, error, ...rest }: Props) {
           </span>
         )}
       </div>
-      {error && <small className="text-xs text-red-500">{error}</small>}
+      {error && <small className="text-xs text-red-500">{error.message}</small>}
     </div>
   )
 }
