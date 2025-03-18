@@ -1,4 +1,5 @@
 import { ReactNode, useReducer } from 'react'
+import { useNavigate } from 'react-router'
 
 import { CartContext } from './cart-context'
 import { cartReducer, Item } from '../reducers/cart-reducer'
@@ -7,15 +8,20 @@ import {
   removeItemAction,
   incrementItemQuantityAction,
   decrementItemQuantityAction,
+  checkoutCartAction,
 } from '../reducers/cart-actions'
+import { OrderInfo } from '../pages/checkout'
 
 interface CartContextProviderProps {
   children: ReactNode
 }
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
-  const [items, dispatch] = useReducer(cartReducer, [] as Item[])
+  const [cart, dispatch] = useReducer(cartReducer, { items: [], orders: [] })
+  const { items, orders } = cart
   const cartItemCount = items.length
+
+  const navigate = useNavigate()
 
   function addItem(item: Item) {
     dispatch(addItemAction(item))
@@ -33,15 +39,21 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     dispatch(decrementItemQuantityAction(id))
   }
 
+  function checkout(order: OrderInfo) {
+    dispatch(checkoutCartAction(order, navigate))
+  }
+
   return (
     <CartContext.Provider
       value={{
         items,
+        orders,
         cartItemCount,
         addItem,
         removeItem,
         incrementItemQuantity,
         decrementItemQuantity,
+        checkout,
       }}
     >
       {children}

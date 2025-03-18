@@ -1,3 +1,6 @@
+import { NavigateFunction } from 'react-router'
+
+import { OrderInfo } from '../pages/checkout'
 import { Item } from './cart-reducer'
 
 export enum CartActionTypes {
@@ -5,6 +8,7 @@ export enum CartActionTypes {
   REMOVE_ITEM = 'REMOVE_ITEM',
   INCREMENT_ITEM_QUANTITY = 'INCREMENT_ITEM_QUANTITY',
   DECREMENT_ITEM_QUANTITY = 'DECREMENT_ITEM_QUANTITY',
+  CHECKOUT_CART = 'CHECKOUT_CART',
 }
 
 export type CartAction =
@@ -15,6 +19,13 @@ export type CartAction =
         | CartActionTypes.INCREMENT_ITEM_QUANTITY
         | CartActionTypes.DECREMENT_ITEM_QUANTITY
       payload: { id: Item['id'] }
+    }
+  | {
+      type: CartActionTypes.CHECKOUT_CART
+      payload: {
+        order: OrderInfo
+        callback: NavigateFunction
+      }
     }
 
 export function addItemAction(item: Item) {
@@ -42,5 +53,15 @@ export function decrementItemQuantityAction(id: Item['id']) {
   return {
     type: CartActionTypes.DECREMENT_ITEM_QUANTITY,
     payload: { id },
+  } satisfies CartAction
+}
+
+export function checkoutCartAction(
+  order: OrderInfo,
+  callback: NavigateFunction
+) {
+  return {
+    type: CartActionTypes.CHECKOUT_CART,
+    payload: { order, callback },
   } satisfies CartAction
 }
